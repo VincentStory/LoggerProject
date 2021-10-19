@@ -47,6 +47,7 @@ class LogDispatcher {
         }
 
         private fun getFileLineMethod(level: Int): String? {
+            //通过传入层级获取对应的类名，行数，方法名
             val element = Exception().stackTrace[level]
             val buffer = StringBuffer()
                 .append("|(")

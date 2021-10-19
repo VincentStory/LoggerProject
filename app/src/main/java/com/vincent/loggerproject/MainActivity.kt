@@ -8,7 +8,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//
         LogDispatcher.d("tag", "打印日志");
     }
 }
