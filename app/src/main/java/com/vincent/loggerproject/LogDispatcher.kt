@@ -195,18 +195,21 @@ class LogDispatcher {
             if (BuildConfig.DEBUG) {
                 if (tag == null || tag.isEmpty() || text == null || text.isEmpty()) return
                 val segmentSize = 3 * 1024
-                val length = text.length.toLong()
+                var length = text.length.toLong()
                 if (length <= segmentSize) { // 长度小于等于限制直接打印
                     printSegment(level, tag, text)
                 } else {
-                    text?.length?.let {
-                        while (it > segmentSize) { // 循环分段打印日志
-                            val logContent = text?.substring(0, segmentSize)
-                            text = logContent?.let { it1 -> text?.replace(it1, "") }
-                            printSegment(level, tag, logContent)
+                    while (length > segmentSize) { // 循环分段打印日志
+                        val logContent = text?.substring(0, segmentSize)
+                        text = logContent?.let { it1 -> text?.replace(it1, "") }
+
+                        text?.length?.toLong()?.let {
+                            length = it
                         }
-                        printSegment(level, tag, text)
+
+                        printSegment(level, tag, logContent)
                     }
+                    printSegment(level, tag, text)
 
                 }
             } else {
@@ -292,23 +295,27 @@ class LogDispatcher {
     }
 
 }
-
 fun LogI(tag: String?, msg: String?) {  //信息太长,分段打印
     //因为String的length是字符数量不是字节数量所以为了防止中文字符过多，
     //  把4*1024的MAX字节打印长度改为2001字符数
-    var msg = msg
-    var max_str_length = 0
-    tag?.length?.let {
-        max_str_length = 2001 - it
-    }
-    //大于4000时
-
-    msg?.length?.let {
-        while (it > max_str_length) {
-            msg?.substring(0, max_str_length)?.let { it1 -> i(tag, it1) }
-            msg = msg?.substring(max_str_length)
-        }
-    }
+//    var msg = msg
+//    var max_str_length = 3000
+////    msg?.length?.let {
+////        max_str_length = 2001 - it
+////    }
+//    //大于4000时
+//    var length = 0
+//    msg?.length?.let {
+//        length = it
+//    }
+//
+//    while (length > max_str_length) {
+//        msg?.substring(0, max_str_length)?.let { it1 -> i(tag, it1) }
+//        msg = msg?.substring(max_str_length)
+//        msg?.length?.let {
+//            length = it
+//        }
+//    }
     //剩余部分
     msg?.let { i(tag, it) }
 }
