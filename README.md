@@ -31,6 +31,27 @@
         }
 
 ```
+```
+ if (tag == null || tag.isEmpty() || text == null || text.isEmpty()) return
+                val segmentSize = 3 * 1024
+                var length = text.length.toLong()
+                if (length <= segmentSize) { // 长度小于等于限制直接打印
+                    printSegment(level, tag, text)
+                } else {
+                    while (length > segmentSize) { // 循环分段打印日志
+                        val logContent = text?.substring(0, segmentSize)
+                        text = logContent?.let { it1 -> text?.replace(it1, "") }
+
+                        text?.length?.toLong()?.let {
+                            length = it
+                        }
+
+                        printSegment(level, tag, logContent)
+                    }
+                    printSegment(level, tag, text)
+
+                }
+```
 
 ### 输出效果
 ```
